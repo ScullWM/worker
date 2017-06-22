@@ -7,7 +7,7 @@ func ClearMailjetEmailsPrint(message string) {
 func ClearMailjetEmails() {
 	ClearMailjetEmailsPrint("Connecting to the database")
 
-	var db = GetDatabaseConnection()
+	db := GetDatabaseConnection()
 	defer db.Close()
 
 	ClearMailjetEmailsPrint("Clearing Mailjet emails")

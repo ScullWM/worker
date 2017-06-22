@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	var heartbeatIntervalString = GetEnvVar("HEARTBEAT_INTERVAL", "5")
+	heartbeatIntervalString := GetEnvVar("HEARTBEAT_INTERVAL", "5")
 	heartbeatInterval, err := strconv.Atoi(heartbeatIntervalString)
 	if err != nil {
 		panic(err)
@@ -39,12 +39,12 @@ func JobPrint(jobName string, message string) {
 }
 
 func GetDatabaseConnection() *sql.DB {
-	var dbHost = GetEnvVar("DATABASE_HOST", "127.0.0.1")
-	var dbPort = GetEnvVar("DATABASE_PORT", "3306")
-	var dbName = GetEnvVar("DATABASE_NAME", "enmarche")
-	var dbUser = GetEnvVar("DATABASE_USER", "root")
-	var dbPass = GetEnvVar("DATABASE_PASSWORD", "root")
-	var dsn = dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName
+	dbHost := GetEnvVar("DATABASE_HOST", "127.0.0.1")
+	dbPort := GetEnvVar("DATABASE_PORT", "3306")
+	dbName := GetEnvVar("DATABASE_NAME", "enmarche")
+	dbUser := GetEnvVar("DATABASE_USER", "root")
+	dbPass := GetEnvVar("DATABASE_PASSWORD", "root")
+	dsn := dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

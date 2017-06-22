@@ -7,7 +7,7 @@ func ReferentManagedUsersPrint(message string) {
 func ReferentManagedUsers() {
 	ReferentManagedUsersPrint("Connecting to the database")
 
-	var db = GetDatabaseConnection()
+	db := GetDatabaseConnection()
 	defer db.Close()
 
 	// group_concat_max_len
