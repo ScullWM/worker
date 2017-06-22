@@ -1,0 +1,30 @@
+machine:
+    services:
+        - docker
+
+test:
+    override:
+        # Statically compile the app
+        - go get -t -d -v ./...
+        - CGO_ENABLED=0 GOOS=linux go build -v -a -installsuffix cgo -o worker .
+
+        # Build the container
+        - docker build -t eu.gcr.io/$GCLOUD_PROJECT/worker-cleanup:$CIRCLE_SHA1 .
+
+        # Try to run the container
+        - docker run -d --name test-worker eu.gcr.io/$GCLOUD_PROJECT/worker-cleanup:$CIRCLE_SHA1; sleep 1
+        - docker logs test-worker | grep -q "Starting worker"
+
+deployment:
+    gcloud:
+        branch: master
+        owner: EnMarche
+        commands:
+            # Google Cloud authentication
+            - echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/gcloud-service-key.json
+            - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+            - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+            - sudo /opt/google-cloud-sdk/bin/gcloud config set project $GCLOUD_PROJECT
+
+            # Push the image to Google Cloud
+            - sudo /opt/google-cloud-sdk/bin/gcloud docker -- push eu.gcr.io/$GCLOUD_PROJECT/worker-cleanup:$CIRCLE_SHA1
