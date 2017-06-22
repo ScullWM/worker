@@ -1,11 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
-	"time"
 	"strconv"
-	"database/sql"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/robfig/cron"
 )
@@ -34,7 +35,7 @@ func main() {
 }
 
 func JobPrint(jobName string, message string) {
-	fmt.Println(jobName+" | "+ message)
+	fmt.Println(jobName + " | " + message)
 }
 
 func GetDatabaseConnection() *sql.DB {
@@ -43,7 +44,7 @@ func GetDatabaseConnection() *sql.DB {
 	var dbName = GetEnvVar("DATABASE_NAME", "enmarche")
 	var dbUser = GetEnvVar("DATABASE_USER", "root")
 	var dbPass = GetEnvVar("DATABASE_PASSWORD", "root")
-	var dsn = dbUser+":"+dbPass+"@tcp("+dbHost+":"+dbPort+")/"+dbName
+	var dsn = dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
