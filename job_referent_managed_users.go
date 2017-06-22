@@ -10,18 +10,14 @@ func ReferentManagedUsers() {
 	var db = GetDatabaseConnection()
 	defer db.Close()
 
-	/*
-	 * group_concat_max_len
-	 */
+	// group_concat_max_len
 	ReferentManagedUsersPrint("Setting group_concat_max_len")
 
 	if _, err := db.Exec(`SET group_concat_max_len=15000`); err != nil {
 		panic(err)
 	}
 
-	/*
-	 * Adherents
-	 */
+	// Adherents
 	ReferentManagedUsersPrint("Inserting adherents")
 
 	if _, err := db.Exec(`
@@ -64,9 +60,7 @@ func ReferentManagedUsers() {
 		panic(err)
 	}
 
-	/*
-	 * Newsletter
-	 */
+	// Newsletter
 	ReferentManagedUsersPrint("Inserting newsletter subscriptions")
 
 	if _, err := db.Exec(`
@@ -95,18 +89,14 @@ func ReferentManagedUsers() {
 		panic(err)
 	}
 
-	/*
-	 * Switching data source
-	 */
+	// Switching data source
 	ReferentManagedUsersPrint("Switching front-end data source")
 
 	if _, err := db.Exec(`UPDATE projection_referent_managed_users SET status = status + 1`); err != nil {
 		panic(err)
 	}
 
-	/*
-	 * Removing expired data
-	 */
+	// Removing expired data
 	ReferentManagedUsersPrint("Removing expired data")
 
 	if _, err := db.Exec(`DELETE FROM projection_referent_managed_users WHERE status >= 2`); err != nil {
