@@ -15,9 +15,8 @@ func ReferentManagedUsers() {
 	 */
 	ReferentManagedUsersPrint("Setting group_concat_max_len")
 
-	var _, err = db.Exec(`SET group_concat_max_len=15000`)
-	if err != nil {
-		panic(err.Error())
+	if _, err := db.Exec(`SET group_concat_max_len=15000`); err != nil {
+		panic(err)
 	}
 
 	/*
@@ -25,7 +24,7 @@ func ReferentManagedUsers() {
 	 */
 	ReferentManagedUsersPrint("Inserting adherents")
 
-	_, err = db.Exec(`
+	if _, err := db.Exec(`
 		INSERT INTO projection_referent_managed_users
 		(status, type, original_id, email, postal_code, city, country, first_name, last_name, age, phone, committees, is_committee_member, is_committee_host, is_mail_subscriber, created_at)
 			SELECT
@@ -61,10 +60,8 @@ func ReferentManagedUsers() {
 				a.referents_emails_subscription,
 				a.registered_at
 			FROM adherents a
-	`)
-
-	if err != nil {
-		panic(err.Error())
+	`); err != nil {
+		panic(err)
 	}
 
 	/*
@@ -72,7 +69,7 @@ func ReferentManagedUsers() {
 	 */
 	ReferentManagedUsersPrint("Inserting newsletter subscriptions")
 
-	_, err = db.Exec(`
+	if _, err := db.Exec(`
 		INSERT INTO projection_referent_managed_users
 		(status, type, original_id, email, postal_code, city, country, first_name, last_name, age, phone, committees, is_committee_member, is_committee_host, is_mail_subscriber, created_at)
 			SELECT
@@ -94,10 +91,8 @@ func ReferentManagedUsers() {
 				n.created_at
 			FROM newsletter_subscriptions n
 			WHERE LENGTH(n.postal_code) = 5
-	`)
-
-	if err != nil {
-		panic(err.Error())
+	`); err != nil {
+		panic(err)
 	}
 
 	/*
@@ -105,9 +100,8 @@ func ReferentManagedUsers() {
 	 */
 	ReferentManagedUsersPrint("Switching front-end data source")
 
-	_, err = db.Exec(`UPDATE projection_referent_managed_users SET status = status + 1`)
-	if err != nil {
-		panic(err.Error())
+	if _, err := db.Exec(`UPDATE projection_referent_managed_users SET status = status + 1`); err != nil {
+		panic(err)
 	}
 
 	/*
@@ -115,9 +109,8 @@ func ReferentManagedUsers() {
 	 */
 	ReferentManagedUsersPrint("Removing expired data")
 
-	_, err = db.Exec(`DELETE FROM projection_referent_managed_users WHERE status >= 2`)
-	if err != nil {
-		panic(err.Error())
+	if _, err := db.Exec(`DELETE FROM projection_referent_managed_users WHERE status >= 2`); err != nil {
+		panic(err)
 	}
 
 	ReferentManagedUsersPrint("Done")

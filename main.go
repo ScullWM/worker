@@ -15,7 +15,7 @@ func main() {
 	var heartbeatIntervalString = GetEnvVar("HEARTBEAT_INTERVAL", "5")
 	heartbeatInterval, err := strconv.Atoi(heartbeatIntervalString)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
 
 	JobPrint("worker", "Starting worker with heartbeat at "+heartbeatIntervalString+"sec")
@@ -48,12 +48,11 @@ func GetDatabaseConnection() *sql.DB {
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		panic(err.Error())
+	if db.Ping() != nil {
+		panic(err)
 	}
 
 	return db

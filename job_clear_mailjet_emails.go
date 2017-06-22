@@ -12,9 +12,8 @@ func ClearMailjetEmails() {
 
 	ClearMailjetEmailsPrint("Clearing Mailjet emails")
 
-	var _, err = db.Exec(`DELETE FROM mailjet_emails WHERE created_at < DATE_SUB(NOW(), INTERVAL 15 DAY)`)
-	if err != nil {
-		panic(err.Error())
+	if _, err := db.Exec(`DELETE FROM mailjet_emails WHERE created_at < DATE_SUB(NOW(), INTERVAL 15 DAY)`); err != nil {
+		panic(err)
 	}
 
 	ClearMailjetEmailsPrint("Done")
